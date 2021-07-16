@@ -9,7 +9,6 @@ import UserSignIn from './components/UserSignIn';
 import UserSignOut from './components/UserSignOut';
 import UserSignUp from './components/UserSignUp';
 
-
 import React, { Component } from 'react';
 
 import {
@@ -19,27 +18,32 @@ import {
   } from 'react-router-dom';
   
   
+
+
 class App extends Component  {
-    /*initialize with defaults
+    //initialize with defaults
     constructor(props) {
       super(props);
       this.state = {
-        searchTopic: 'forest',
-        prevSearchTopic: '',
-        Coursess: [],
-        loading: true
-      };
-      this.searchHistory = [] ; 
-      this.updateSearchTopic = this.updateSearchTopic.bind(this) ;
-      this.createCoursesComps = this.createCoursesComps.bind(this) ; 
-      this.createCoursess = this.createCoursess.bind(this) ;
-    } */
-    
+        courses: ''
+      } ;
+      //this.searchHistory = [] ; 
+      this.updateCourses = this.updateCourses.bind(this) ;
+      //this.createCoursesComps = this.createCoursesComps.bind(this) ; 
+    }
+
+    updateCourses = () =>  {
+      const  courses = fetch('localhost:5000')
+      .then( x => x.json() )
+      .then( x => this.setState({courses: x }))
+      .catch( 'error in fetching courses') 
+    };
+
+
     componentDidMount() {
-        //this.
+        this.updateCourses()
       } 
-     
-    
+         
     // Routing 
     render() {
       return (    
@@ -50,11 +54,12 @@ class App extends Component  {
         //   :
           <BrowserRouter> 
             <Switch> 
-              <Route exact path= "/" component={Courses} />  
+              <Route exact path= "/" component={ () =>  <Courses courses = {this.state.courses}/> } />  
             </Switch> 
           </BrowserRouter> }
        </div>   
     );
+    //component={() => <PropsPage title={`Props through component`} />} 
     }
     }
     
