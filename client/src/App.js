@@ -33,9 +33,12 @@ class App extends Component  {
     }
 
     updateCourses = () =>  {
-      const  courses = fetch('localhost:5000')
-      .then( x => x.json() )
-      .then( x => this.setState({courses: x }))
+      const options = {
+        headers: new Headers({'content-type': 'application/json'}),
+      };
+      const  courses = fetch('http://localhost:5000/api/courses', options)
+      .then( x => x.json())
+      .then( x => { this.setState({courses: x }) ; console.log(this.state) })
       .catch( 'error in fetching courses') 
     };
 
@@ -54,7 +57,7 @@ class App extends Component  {
         //   :
           <BrowserRouter> 
             <Switch> 
-              <Route exact path= "/" component={ () =>  <Courses courses = {this.state.courses}/> } />  
+              <Route exact path= "/"  render={ () => <Courses courses={this.state.courses} /> } />  
             </Switch> 
           </BrowserRouter> }
        </div>   
@@ -63,6 +66,22 @@ class App extends Component  {
     }
     }
     
+    /*
+    render() {
+      return (
+      <BrowserRouter> 
+        <div className="container">
+          <SearchForm changeSearchTopic={this.updateSearchTopic} /> 
+          <Nav changeSearchTopicNav={this.updateSearchTopic} /> 
+          <Switch>
+            <Route exact path="/:searchTopic" render={ () => <PhotoContainer photos={this.state.photos} /> } />   
+            <Route component={NotFound} />
+            
+          </Switch>
+        </div>
+      </BrowserRouter>
+    );
+    } */
   
 /* the required routes 
 / - Courses
