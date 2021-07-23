@@ -1,5 +1,7 @@
 import React, { Component } from 'react'; 
 import CourseElement from './CourseElement';
+import '../index.css'; 
+
 
 /*
 Courses - This component provides the "Courses" screen by retrieving the list of courses from the REST API's /api/courses route and rendering a list of courses. 
@@ -32,7 +34,6 @@ class Courses extends Component {
                      <th> id </th>
                      <th> Title </th>
                      <th> Duration </th>
-                     <th> Link </th> 
                      </tr>
                     </thead>
                         {this.createCourseArray(this.props.courses)}
