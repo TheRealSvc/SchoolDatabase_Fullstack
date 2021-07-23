@@ -17,7 +17,7 @@ class Courses extends Component {
         let courseArray = [] ;
          for (let i=0; i<courses.length-1; i++) {
            courseArray.push(
-           <CourseElement title={courses[i].title}  key={i} /> );
+           <CourseElement course={[courses[i].id ,courses[i].title, courses[i].estimatedTime]}  key={i} /> );
          }
          return courseArray ; 
         };
@@ -26,9 +26,17 @@ class Courses extends Component {
             return (
                 <div className="courses-container">
                  <h2> Courses </h2>    
-                    <ul>
+                 <table>
+                    <thead>
+                     <tr>
+                     <th> id </th>
+                     <th> Title </th>
+                     <th> Duration </th>
+                     <th> Link </th> 
+                     </tr>
+                    </thead>
                         {this.createCourseArray(this.props.courses)}
-                    </ul>
+                </table>
                 </div > 
                 )
             }
