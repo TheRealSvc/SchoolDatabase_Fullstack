@@ -7,7 +7,7 @@ const courseElement = (props) => {
     return (  
     <a className="course--module course--link" href="course-detail.html">
       <h2 className="course--label">Course</h2>
-      <h3 className="course--title">{props.course[1]}</h3>
+      <h3 className="course--title"> <a href={"/courses/"+props.course[0]}> {props.course[1]} </a> </h3>
     </a>
 
      //<tbody>

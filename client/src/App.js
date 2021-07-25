@@ -57,7 +57,8 @@ class App extends Component  {
         //   :
           <BrowserRouter> 
             <Switch> 
-              <Route exact path= "/"  render={ () => <Courses courses={this.state.courses} /> } />  
+              <Route exact path= "/"  render={ () => <Courses/> } />  
+              <Route exact path="/courses/:id" render={ () => <CourseDetail/> } />   
             </Switch> 
           </BrowserRouter> }
        </div>   
