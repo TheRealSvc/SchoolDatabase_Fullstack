@@ -9,7 +9,7 @@ class CourseDetail extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {course: '', material: ''}
+    this.state = {course: '', material: '', user: ''}
   };
 
   componentDidUpdate() {
@@ -39,7 +39,8 @@ class CourseDetail extends Component {
     .then( x => x.json())
     .then( x => { this.setState({
       course: x ,
-      material: this.createMaterialList(x)  
+      material: this.createMaterialList(x) ,
+      user: x.User
     }) 
     })
     .catch( 'error in fetching courses') 
@@ -90,7 +91,7 @@ class CourseDetail extends Component {
                     <div>
                       <h3 className="course--detail--title">Course</h3>
                       <h4 className="course--name">Build a Basic Bookcase</h4>
-                      <p> { this.state.User } </p>
+                      <p> By {` ${this.state.user.firstName} ${this.state.user.lastName} ` } </p>
                       {this.state.course.description}
                     </div>
                     <div>
