@@ -1,4 +1,3 @@
-
 import './index.css';
 import Courses from './components/Courses';
 import CourseDetail from './components/CourseDetail';
@@ -8,90 +7,54 @@ import UpdateCourse from './components/UpdateCourse';
 import UserSignIn from './components/UserSignIn';
 import UserSignOut from './components/UserSignOut';
 import UserSignUp from './components/UserSignUp';
+import PrivateRoute from './components/PrivateRoute'
+import Forbidden from './components/Forbidden'
 
 import React, { Component } from 'react';
 
+
 import {
-    BrowserRouter,
+    HashRouter,
     Route,
     Switch,
   } from 'react-router-dom';
-  
-  
 
 
 class App extends Component  {
-    //initialize with defaults
     constructor(props) {
       super(props);
-      this.state = {
-        courses: ''
-      } ;
-      //this.searchHistory = [] ; 
-      this.updateCourses = this.updateCourses.bind(this) ;
-      //this.createCoursesComps = this.createCoursesComps.bind(this) ; 
-    }
-
-    updateCourses = () =>  {
-      const options = {
-        headers: new Headers({'content-type': 'application/json'}),
-      };
-      const  courses = fetch('http://localhost:5000/api/courses', options)
-      .then( x => x.json())
-      .then( x => { this.setState({courses: x }) ; console.log(this.state) })
-      .catch( 'error in fetching courses') 
     };
-
-
-    componentDidMount() {
-        this.updateCourses()
-      } 
-         
+ 
     // Routing 
     render() {
-      return (    
-        <div className="container">
-        {
-         // (this.state.loading)
-        //   ? <p> Loading...</p>
-        //   :
-          <BrowserRouter> 
+      return ( 
+        <HashRouter>    
+        <div className="container"> 
+        <Header/>
             <Switch> 
-              <Route exact path= "/"  render={ () => <Courses/> } />  
-              <Route exact path="/courses/:id" render={ () => <CourseDetail/> } />   
+              <Route exact path= "/" component={Courses} /> 
+              <Route path="/signin" component={UserSignIn} />  
+              <Route path="/signup" component={UserSignUp} />
+              <PrivateRoute exact path="/courses/create" component={CreateCourse} />
+              <Route exact path="/courses/:id" component={CourseDetail } />  
+              <PrivateRoute exact path="/courses/:id/update" component={UpdateCourse} />
+              <Route path="/forbidden" component={Forbidden} />
             </Switch> 
-          </BrowserRouter> }
-       </div>   
-    );
-    //component={() => <PropsPage title={`Props through component`} />} 
-    }
-    }
-    
-    /*
-    render() {
-      return (
-      <BrowserRouter> 
-        <div className="container">
-          <SearchForm changeSearchTopic={this.updateSearchTopic} /> 
-          <Nav changeSearchTopicNav={this.updateSearchTopic} /> 
-          <Switch>
-            <Route exact path="/:searchTopic" render={ () => <PhotoContainer photos={this.state.photos} /> } />   
-            <Route component={NotFound} />
-            
-          </Switch>
         </div>
-      </BrowserRouter>
+        </HashRouter>   
     );
-    } */
-  
-/* the required routes 
-/ - Courses
-/courses/create - CreateCourse
-/courses/:id/update - UpdateCourse
-/courses/:id - CourseDetail
-/signin - UserSignIn
-/signup - UserSignUp
-/signout - UserSignOut
+    }
+}
+    
+export default App;
+
+
+/*
+           <Route exact path= "/" render={ () => <Courses  /> } />  
+              <Route eaxct path="/courses/:id" render={ () => <CourseDetail /> } />  
+   <PrivateRoute path='/courses/create' component={CreateCourse} />
+              <Route exact path="/signin" render={ () => <UserSignIn /> } />   
+              <Route path="/signup" component={UserSignUp} />
+              <Route path="/signout" render={ () => <UserSignOut /> } />
 
 */
-export default App;
