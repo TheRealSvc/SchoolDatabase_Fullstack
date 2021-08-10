@@ -4,8 +4,8 @@ import React, { Fragment } from 'react';
 const UnhandledError = () => (
     <Fragment>
         <div className="bounds">
-            <h1>Unhandles Error</h1>
-            <p> Something went wrong </p>
+            <h1> 500 Internal Error </h1>
+            <p> Ups, something went wrong </p>
         </div>
     </Fragment>
 );

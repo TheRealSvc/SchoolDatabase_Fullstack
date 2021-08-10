@@ -30,7 +30,7 @@ class CourseDetail extends PureComponent {
      // if (res.json().id !== this.props.match.params.id) {
      //   this.props.history.push("/notfound");
      // } else {
-     // throw 'Parameter is not a number!';
+    //  throw 'Parameter is not a number!';
         res.json().then( (course) => {
           console.log(`response key: ${course.User.id}`);
           if (course.id==this.props.match.params.id) {

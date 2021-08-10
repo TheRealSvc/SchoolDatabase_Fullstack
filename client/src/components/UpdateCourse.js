@@ -29,6 +29,7 @@ class UpdateCourse extends Component {
     const  course = fetch(`http://localhost:5000/api/${location.pathname.slice(0, -7) }`, options) // removing the update part of the path
     .then( x => x.json())
     .then( x => { 
+     // throw 'Parameter is not a number!';
      // console.log(`State did change in UpdateCourse: path: ${location.pathname}, new: ${x.id}`) ;
       this.setState({
         courseId: x.id,
@@ -42,7 +43,8 @@ class UpdateCourse extends Component {
         userLastName: x.User.lastName,
     }, x => {console.log(`in UpdateCourse new state email is ${this.state.userEmail}`)})
     }) 
-    .catch( 'error in fetching courses') 
+    .catch((error) => {console.log(error);
+      this.props.history.push("/error")})
   };
  
 
