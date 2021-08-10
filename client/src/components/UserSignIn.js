@@ -26,10 +26,10 @@ class UserSignIn extends Component {
                     <div className="form--centered">
                       <h2>Sign In</h2>
                       <form id="signinform" onSubmit={ e => { 
-                        //console.log(`location.state is ${this.props.location.state}`);  
-                        //const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
+                        console.log(`location.state is ${this.props.location.state}`);  
+                        const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
                         actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'))
-                        .then(() => {this.props.history.push("courses/create")}) ;
+                        .then(() => {this.props.history.push(from)}) ;
                       }}
                        >
                         <label htmlFor="emailAddress">Email Address</label>
@@ -37,9 +37,9 @@ class UserSignIn extends Component {
                         <input id="password" name="password" type="password" defaultValue="" />
                         <button className="button" type="submit" onClick={ e => {
                          // console.log(`location.state is ${this.props.location.state}`);  
-                         // const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
+                        const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
                         actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'))
-                        .then(() => {this.props.history.push("courses/create")}) ;
+                        .then(() => {this.props.history.push(from)}) ;
                       }}
                          > Sign In </button> 
                         <button className="button button-secondary" onClick={ e => this.handleCancel(e) } > Cancel </button>
