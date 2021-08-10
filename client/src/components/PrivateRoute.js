@@ -18,12 +18,12 @@ function PrivateRoute({component: Children, ...rest }) {
         {...rest}
         render={ props =>
           logged[0].status==="authenticated" ? (   
-            <Children/>  
+            <Children {...props}/>  
           ) : (
             <Redirect
               to={{
                 pathname: "/signin",
-                state: { from: props.location }
+                state: { from: props.location },
               }}
             /> 
           )

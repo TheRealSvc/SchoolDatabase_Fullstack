@@ -1,18 +1,19 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {withRouter} from 'react-router'; 
 import CourseElement from './CourseElement';
 import '../global.css';
 import {Link} from 'react-router-dom';
+
 /*
 Courses - This component provides the "Courses" screen by retrieving the list of courses from the REST API's /api/courses route and rendering a list of courses. 
 Each course needs to link to its respective "Course Detail" screen. 
-This component also renders a link to the "Create Course" screen.ateCorsesArray
+This component also renders a link to the "Create Course" screen.
 */
-class Courses extends PureComponent { 
+class Courses extends Component { 
     constructor(props) {
         super(props);
         this.state = {courses: ''}
-        console.log(`in Courses: ${props}`);
+        //console.log(`in Courses: ${props}`);
       };
 
       updateCourses = () =>  {
@@ -26,14 +27,14 @@ class Courses extends PureComponent {
       };
 
       componentDidMount() {
-        //console.log(this.props.location) ;
         this.updateCourses()
       } 
 
       createCourseArray = (courses) => {
-        console.log(`in createCourseArray Anfang: ${courses}`);
+        //console.log(`in createCourseArray Anfang: ${courses}`);
         let courseArray = [] ;
-         for (let i=0; i<courses.length-1; i++) {
+         for (let i=0; i<courses.length; i++) {
+           console.log(i);
            courseArray.push(
            <CourseElement course={[courses[i].id, courses[i].title, courses[i].estimatedTime]}  key={i} /> );
          }

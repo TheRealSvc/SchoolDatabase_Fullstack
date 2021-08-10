@@ -9,6 +9,9 @@ import UserSignOut from './components/UserSignOut';
 import UserSignUp from './components/UserSignUp';
 import PrivateRoute from './components/PrivateRoute'
 import Forbidden from './components/Forbidden'
+import NotFound from './components/NotFound'
+import UnhandledError from './components/UnhandledError'
+import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
@@ -21,6 +24,10 @@ import {
 
 
 class App extends Component  {
+  static propTypes = {
+    location: PropTypes.object.isRequired
+  }
+
     constructor(props) {
       super(props);
     };
@@ -35,26 +42,23 @@ class App extends Component  {
               <Route exact path= "/" component={Courses} /> 
               <Route path="/signin" component={UserSignIn} />  
               <Route path="/signup" component={UserSignUp} />
+              <Route path="/signout" component={UserSignOut} />
               <PrivateRoute exact path="/courses/create" component={CreateCourse} />
-              <Route exact path="/courses/:id" component={CourseDetail } />  
+              <Route exact path="/courses/:id"  component={CourseDetail} />  
               <PrivateRoute exact path="/courses/:id/update" component={UpdateCourse} />
               <Route path="/forbidden" component={Forbidden} />
+              <Route path="/notfound" component={NotFound} />  
+              <Route path="/error" component={UnhandledError} />
+              <Route component={NotFound} />
             </Switch> 
         </div>
         </HashRouter>   
     );
     }
 }
-    
+
+// error handling routes: 
+//       /notfound for CourseDetail and UpdateCourse
+//       /forbidden  if in UpdateCourse the logged user doesnt own the course
+//       /error for each api call returning "500 Internal Server Error"   
 export default App;
-
-
-/*
-           <Route exact path= "/" render={ () => <Courses  /> } />  
-              <Route eaxct path="/courses/:id" render={ () => <CourseDetail /> } />  
-   <PrivateRoute path='/courses/create' component={CreateCourse} />
-              <Route exact path="/signin" render={ () => <UserSignIn /> } />   
-              <Route path="/signup" component={UserSignUp} />
-              <Route path="/signout" render={ () => <UserSignOut /> } />
-
-*/

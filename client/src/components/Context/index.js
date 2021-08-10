@@ -8,6 +8,8 @@ export const Consumer = AuthenticationContext.Consumer ;
 */
 import React, { Component } from 'react';
 import { withRouter, Route ,Link } from "react-router-dom";
+import Cookies from "js-cookie";
+
 const AuthContext = React.createContext();
 const axios = require('axios');
 
@@ -15,7 +17,10 @@ export class Provider extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        let authUser = [JSON.parse(Cookies.get("logged"))] || null ;
+        console.log(`testtest... ${authUser} of type ${typeof(authUser)} and ${Object.entries(authUser)}`);
+        if (isFinite(authUser) || !authUser) {   // if no cookie about the authenticated user is stored initialize empty "logged-state"
+          this.state = {
             logged: [{
                 status: "",
                 email: "",
@@ -25,6 +30,13 @@ export class Provider extends Component {
                 userid: null,
             }]
             };
+            console.log("initialization with empty user (no cookie)") ;
+          } else {   //otherwise use cookie information
+            this.state = {
+              logged: authUser
+            }
+            console.log(`cookie was used to signIn user ${this.state.logged}`) ;
+          }
         this.handleLoggedIn =this.handleLoggedIn.bind(this);        
         };
   
@@ -33,12 +45,18 @@ handleLoggedIn = (x) => {
    // form.reset() ;
 }    
 
+componentDidMount() {
+ // this.signIn();
+}
+
 // called in UserSignIn 
 signIn = async (e, name, password) => {
+    console.log(name,password);
     e.preventDefault();
     const form = document.getElementById("signinform");
     console.log(`in Sign In: name Input= ${name.value} and state.email= ${this.state.logged[0].email} `);
     console.log(`in Sign In: password= ${password.value}`);
+    console.log(`in Sign In: logged ${this.state.logged[0]}`);
     
     if (name !== this.state.logged[0].email) {
       const authHeader = `Basic ${window.btoa(name.value+":"+password.value)}` 
@@ -63,8 +81,13 @@ signIn = async (e, name, password) => {
                 lastname:  response.data.lastName,
                 userid: response.data.id,
                 }]    
-             }, x => { console.log(`You are logged in ${this.state.firstname} ${this.state.lastname}`) }
-             ); 
+             }, x => { console.log(`You are logged in ${this.state.logged[0].firstname} ${this.state.logged[0].lastname}`); 
+              Cookies.set("logged", JSON.stringify(this.state.logged[0]), { expires: 10 })  }
+             );
+             console.log(`0 - original: ${this.state.logged}`);  
+             console.log(`1 - stringified: ${JSON.stringify(this.state.logged)}`);
+             console.log(`2 - back parsed: ${JSON.parse(JSON.stringify(this.state.logged))}`);
+             //Cookies.set("logged", JSON.stringify(this.state.logged), { expires: 10 }); // cookie is set after successfull login
             }
          }
         )  
@@ -84,7 +107,8 @@ signIn = async (e, name, password) => {
             lastname: "",
             userid: null,
             }]    
-         }, x => { console.log(this.state.logged) }); 
+         }, x => { console.log(this.state.logged) });
+         Cookies.remove("logged"); 
     }
 
   render() {
@@ -93,7 +117,8 @@ signIn = async (e, name, password) => {
         logged: this.state.logged,
         actions: {
           signIn: this.signIn,
-          signOut: this.signOut
+          signOut: this.signOut,
+          triggerRender: this.triggerRender,
         }
       }}>
         { this.props.children }
@@ -102,6 +127,4 @@ signIn = async (e, name, password) => {
   }  
 }
 
-
 export const Consumer = withRouter(AuthContext.Consumer);
-

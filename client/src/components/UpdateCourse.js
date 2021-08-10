@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router'; // required for accessing the location prop 
 import { Consumer } from './Context';
 import PropTypes from 'prop-types';
-const axios = require('axios');
+import FormValidation from './FormValidation' ;
+
+
+let axios = require('axios');
 
 
 class UpdateCourse extends Component { 
@@ -11,10 +14,11 @@ class UpdateCourse extends Component {
       }
       constructor(props) {
         super(props);
-        this.state = {title: '', courseId: '', material: '', description: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
+        this.state = {courseTitle: '', courseId: '', material: '', courseDescription: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);     
     };
-
+    
 
   getCourse = () =>  {
     const { location} = this.props ;
@@ -28,9 +32,9 @@ class UpdateCourse extends Component {
      // console.log(`State did change in UpdateCourse: path: ${location.pathname}, new: ${x.id}`) ;
       this.setState({
         courseId: x.id,
-        title: x.title,
+        courseTitle: x.title,
         material: x.materialsNeeded,
-        description: x.description,
+        courseDescription: x.description,
         estimatedTime: x.estimatedTime,
         userId: x.User.id,
         userEmail: x.User.emailAddress,
@@ -42,16 +46,17 @@ class UpdateCourse extends Component {
   };
  
 
-handleUpdate = (e,password,title, description) => {
+handleUpdate = (e,password) => {
+    const {courseTitle, courseDescription} = this.state ;
     const { history } = this.props ;
     e.preventDefault();
-    console.log(`Hallo ich bin in handleUpdate in UpdateCourses. The title ${title}`)
+    console.log(`Hallo ich bin in handleUpdate in UpdateCourses. The title ${courseTitle}`);
     const { location} = this.props ;
-    console.log(`password is ${password} and location is ${location.pathname.slice(0, -7)}` );
+    console.log(`password is ${password} and location is ${location.pathname.slice(0, -7)}`);
     var data = JSON.stringify({
       "id": this.state.courseId,
-      "title": title,
-      "description": description,
+      "title": courseTitle,
+      "description": courseDescription,
       "userId": this.state.userId,
     });
     console.log(data);
@@ -67,19 +72,27 @@ handleUpdate = (e,password,title, description) => {
     
     axios(config)
     .then( response => { if(response.status===204) { console.log("status 204") ;
-        } else { console.log("status ungleich 204"); this.props.history.push('/forbidden') } 
-    })  // update page
+        } else if(response.status===401) { history.push('/forbidden') } 
+      })  // update page
+    .then( response => {
+      history.push('/') ;
+    })
     .catch(function (error) {
-      this.props.history.push('/forbidden');  
+      history.push('/forbidden');  
       console.log(error);
     }); 
 }
 
-
   componentDidMount() {
+    console.log("componentDdMound called in UpdateCourse")
     this.getCourse() ;
   } 
 
+  handleInputChange = (e) => {
+    e.preventDefault();
+    console.log(`state: ${e.target.name}, ${e.target.value}`);
+    this.setState({[e.target.name]: e.target.value }, () => { console.log(this.state) });
+  }
 
   handleCancel = (e) => {
     e.preventDefault();
@@ -92,23 +105,24 @@ handleUpdate = (e,password,title, description) => {
         { ({ actions, logged }) => (
     <div className="wrap">
         <h2>Update Course</h2>
+        <FormValidation Title={this.state.courseTitle} Description={this.state.courseDescription} /> 
         <form>
           <div className="main--flex">
             <div>
               <label htmlFor="courseTitle">Course Title</label>
-              <input id="courseTitle" name="courseTitle" type="text" defaultValue={this.state.title} />
+              <input id="courseTitle" name="courseTitle" type="text" value={this.state.courseTitle} onChange={this.handleInputChange} />
               <p> By {this.state.userFirstName} {this.state.userLastName} </p>
               <label htmlFor="courseDescription">Course Description</label>
-              <textarea id="courseDescription" name="courseDescription" defaultValue={this.state.description } />
+              <textarea id="courseDescription" name="courseDescription" value={this.state.courseDescription} onChange={this.handleInputChange} />
             </div>
             <div>
               <label htmlFor="estimatedTime">Estimated Time</label>
-              <input id="estimatedTime" name="estimatedTime" type="text" defaultValue={this.state.estimatedTime} />
+              <input id="estimatedTime" name="estimatedTime" type="text"  value={this.state.estimatedTime} onChange={this.handleInputChange} />
               <label htmlFor="materialsNeeded">Materials Needed</label>
-              <textarea id="materialsNeeded" name="materialsNeeded" defaultValue={this.state.material} />
+              <textarea id="materialsNeeded" name="materialsNeeded"  value={this.state.material} onChange={this.handleInputChange} />
             </div>
           </div>
-          <button className="button" type="submit" onClick={ e => this.handleUpdate(e,logged[0].password, document.querySelector("#courseTitle").value,document.querySelector("#courseDescription").value) } >Update Course</button>
+          <button className="button" type="submit" onClick={ e => this.handleUpdate(e,logged[0].password) } >Update Course</button>
           <button className="button button-secondary" onClick={e => this.handleCancel(e)} >Cancel</button>
         </form>
       </div>

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router'; // required for accessing the location prop 
 import { Consumer } from './Context';
+import FormValidation from './FormValidation' ;
 const axios = require('axios');
+
 
 class CreateCourse extends Component { 
     static propTypes = {
@@ -11,9 +13,10 @@ class CreateCourse extends Component {
 
       constructor(props) {
         super(props);
-        this.state = {title: '', courseId: '', material: '', description: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
+        this.state = {courseTitle: '', courseDescription: ''};
         this.handleCancel = this.handleCancel.bind(this);
         this.handleCreateCourse = this.handleCreateCourse.bind(this);
+        this.handleInputChange =  this.handleInputChange.bind(this);      
         };
 
       componentDidUpdate() {
@@ -26,10 +29,12 @@ class CreateCourse extends Component {
       }
 
       handleCreateCourse = (e, userId, password,title, description, estTime, matNeeded) => {
-        //const { history } = this.props ;
+        const { history } = this.props ;
         e.preventDefault();
-        console.log(`Hallo ich bin in handleCreateCourse in CreateCourses. The password ${password} ans userIf ${userId}`)
+        //console.log(`Hallo ich bin in handleCreateCourse in CreateCourses. The password ${password} and userId ${userId}`)
         //const { location} = this.props ;
+
+       if (this.state.courseDescription.length>0 && this.state.courseTitle.length>0) {   
 
         var data = JSON.stringify({
             "title": title,
@@ -38,10 +43,10 @@ class CreateCourse extends Component {
             "estimatedTime": estTime,
             "materialsNeeded": matNeeded, 
           });
-          console.log(data);  
+          //console.log(data);  
           var config = {
             method: 'post',
-            url: 'localhost:5000/api/courses',
+            url: 'http://localhost:5000/api/courses',
             headers: { 
               'Content-Type': 'application/json', 
               'Authorization': password
@@ -50,15 +55,22 @@ class CreateCourse extends Component {
           };
         
         axios(config)
-          .then(function (response) {
-            console.log(JSON.stringify(response.data));
-            this.props.history.push('/') 
+          .then( response => {
+            //console.log(JSON.stringify(response.data));
+            this.props.history.push('/') ;
           })
           .catch(function (error) {
             console.log(error);
           });
+    } else {console.log("title oder description fehlen")}
+  }
+  
+    handleInputChange = (e) => {
+      e.preventDefault();
+      console.log(`got from event.target that: ${e.target.name}, ${e.target.value}`);
+      this.setState({[e.target.name]: e.target.value }, () => { console.log(`actual state afzer setState: ${this.state}`) });
     }
-    
+
     render() {
         return (
           <Consumer>
@@ -67,21 +79,15 @@ class CreateCourse extends Component {
                 <main>
                     <div class="wrap">
                         <h2>Create Course</h2>
-                        <div class="validation--errors">
-                        <h3>Validation Errors</h3>
-                        <ul>
-                            <li>Please provide a value for "Title"</li>
-                            <li>Please provide a value for "Description"</li>
-                        </ul>
-                    </div>
+                        <FormValidation Title={this.state.courseTitle} Description={this.state.courseDescription} /> 
                  <form>
                     <div class="main--flex">
                         <div>
                             <label for="courseTitle">Course Title</label>
-                            <input id="courseTitle" name="courseTitle" type="text" defaultValue="" />
+                            <input id="courseTitle" name="courseTitle" value={this.state.courseTitle} onChange={this.handleInputChange}  type="text" />
                             <p>By {logged[0].firstname} {logged[0].lastname}</p>
                             <label for="courseDescription">Course Description</label>
-                            <textarea id="courseDescription" name="courseDescription"></textarea>
+                            <textarea id="courseDescription" name="courseDescription" value={this.state.courseDescription} onChange={this.handleInputChange}></textarea>
                         </div>
 
                         <div>
@@ -104,4 +110,5 @@ class CreateCourse extends Component {
     );
     }
     }
+
 export default withRouter(CreateCourse);
