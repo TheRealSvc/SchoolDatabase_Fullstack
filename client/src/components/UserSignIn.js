@@ -26,7 +26,7 @@ class UserSignIn extends Component {
                     <div className="form--centered">
                       <h2>Sign In</h2>
                       <form id="signinform" onSubmit={ e => { 
-                        console.log(`location.state is ${this.props.location.state}`);  
+                        // console.log(`location.state is ${this.props.location.state}`);  
                         const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
                         actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'))
                         .then(() => {this.props.history.push(from)}) ;

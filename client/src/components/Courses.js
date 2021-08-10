@@ -36,7 +36,7 @@ class Courses extends Component {
          for (let i=0; i<courses.length; i++) {
            console.log(i);
            courseArray.push(
-           <CourseElement course={[courses[i].id, courses[i].title, courses[i].estimatedTime]}  key={i} /> );
+           <CourseElement course={[courses[i].id, courses[i].title, courses[i].estimatedTime]} key={i} /> );
          }
          return courseArray ; 
         };

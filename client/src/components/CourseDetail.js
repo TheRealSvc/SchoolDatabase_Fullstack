@@ -17,20 +17,6 @@ class CourseDetail extends PureComponent {
     userFirstName:'',userLastName: ''}
   };
 
-  /* 
-  creates a list of li elements for materialNeeded --- legacy ... did it before switching to react-markdown
-  */ 
-  /*createMaterialList = (instr) => {
-    let outArr = [];
-    console.log(instr.materialsNeeded)
-    outArr = instr.materialsNeeded ? instr.materialsNeeded.split("* ") : [''] ;
-    let res = [] ;
-    for (let i=0; i<outArr.length ; i+=1 ) {
-     res.push(<li> {outArr[i]}  </li>) // key={i} return valid jsx ,mhhh?
-    }
-  return res; 
-  } */
-
   updateCourses = () =>  {
     const { location, history} = this.props ;
     const options = {
@@ -41,9 +27,10 @@ class CourseDetail extends PureComponent {
     fetch(
       `http://localhost:5000/api/courses/${this.props.match.params.id}`)
     .then((res) => { console.log(`props id: ${this.props.match.params.id}`); 
-      //if (res.json().User.id !== this.props.match.params.id) {
-      //  this.props.history.push("/notfound");
+     // if (res.json().id !== this.props.match.params.id) {
+     //   this.props.history.push("/notfound");
      // } else {
+     // throw 'Parameter is not a number!';
         res.json().then( (course) => {
           console.log(`response key: ${course.User.id}`);
           if (course.id==this.props.match.params.id) {
@@ -60,21 +47,17 @@ class CourseDetail extends PureComponent {
               userLastName: course.User.lastName,
           }, x => { console.log(`in CourseDetails new state userId is ${this.state.userId}`)}) ; 
         } else {
-          console.log(" redirect to /notfound")
+          console.log(" redirect to /notfound") 
           this.props.history.push("/notfound") ; }
-        })}) 
+        })})
+        .catch((error) => {console.log(error);
+          this.props.history.push("/error")})
   };
  
   componentDidMount() {
     this.updateCourses()
   } 
 
-  /*
-  componentWillReceiveProps(nextProps){
-       this.setState({ 
-          switch: !(this.state.switch)
-       })
- } */
 deleteCourse = (e, coursePath, password) =>  {
   e.preventDefault() ; 
   console.log(`password is : ${password}`)
@@ -99,7 +82,6 @@ axios(config)
   console.log(`deletion of courseId ${id} failed`);
 });
 }
-
 
 /* 
 On the "Course Detail" screen, add rendering logic so that the "Update Course" and "Delete Course" buttons only display if:

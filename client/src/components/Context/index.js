@@ -14,13 +14,27 @@ import Cookies from "js-cookie";
 const AuthContext = React.createContext();
 const axios = require('axios');
 
+
 export class Provider extends Component {
 
     constructor(props) {
+      var testjson = function(x) { 
+          try {
+            JSON.parse(x);
+            return true;
+          } catch {
+            return false;
+          }
+        };
         super(props);
-        let authUser = [JSON.parse(Cookies.get("logged"))] || false ;
+
+        let authUser = false ;
+        if(testjson(Cookies.get("logged"))) {
+          authUser = [JSON.parse(Cookies.get("logged"))]
+        }
+        
         //console.log(`testtest... ${authUser} of type ${typeof(authUser)} and ${Object.entries(authUser)}`);
-        if (isFinite(authUser) || !authUser) {   // if no cookie about the authenticated user is stored initialize empty "logged-state"
+        if ( !authUser ) {   // if no cookie about the authenticated user is stored initialize empty "logged-state"
           this.state = {
             logged: [{
                 status: "",
@@ -38,17 +52,11 @@ export class Provider extends Component {
             }
             console.log(`cookie was used to signIn user ${this.state.logged}`) ;
           }
-        this.handleLoggedIn =this.handleLoggedIn.bind(this);        
         };
   
-handleLoggedIn = (x) => {
-   // const form = document.getElementById("signinform") ;
-   // form.reset() ;
-}    
+       
 
-componentDidMount() {
- // this.signIn();
-}
+componentDidMount() {}
 
 // called in UserSignIn 
 signIn = async (e, name, password) => {

@@ -15,9 +15,9 @@ const FormValidation = (props) => {
 
     if (keysWithZeroLen.length) {
       return (
-        <div class="validation--errors">
+        <div className="validation--errors">
          <ul>
-            <li class="validation--fonts"> 
+            <li className="validation--fonts"> 
              Please a provide a value for:  {keysWithZeroLen.join(" , ")}
            </li> 
          </ul>
