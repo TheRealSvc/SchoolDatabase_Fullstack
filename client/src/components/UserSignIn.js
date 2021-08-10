@@ -28,8 +28,8 @@ class UserSignIn extends Component {
                       <form id="signinform" onSubmit={ e => { 
                         //console.log(`location.state is ${this.props.location.state}`);  
                         //const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
-                        actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'));
-                        this.props.history.push("/") ;
+                        actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'))
+                        .then(() => {this.props.history.push("courses/create")}) ;
                       }}
                        >
                         <label htmlFor="emailAddress">Email Address</label>
@@ -38,8 +38,8 @@ class UserSignIn extends Component {
                         <button className="button" type="submit" onClick={ e => {
                          // console.log(`location.state is ${this.props.location.state}`);  
                          // const { from } = this.props.location.state || { from:  {pathname: '/'}} ;
-                        actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'));
-                        this.props.history.push("/") ;
+                        actions.signIn(e, document.querySelector('#emailAddress'), document.querySelector('#password'))
+                        .then(() => {this.props.history.push("courses/create")}) ;
                       }}
                          > Sign In </button> 
                         <button className="button button-secondary" onClick={ e => this.handleCancel(e) } > Cancel </button>

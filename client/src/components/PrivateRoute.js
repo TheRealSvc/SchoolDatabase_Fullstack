@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Consumer } from '../components/Context';
-
+import { withRouter } from "react-router";
 import {
   BrowserRouter as Router,
   Route,
@@ -32,5 +32,5 @@ function PrivateRoute({component: Children, ...rest }) {
     );
   }
   
-export default PrivateRoute;
+export default withRouter(PrivateRoute);
 

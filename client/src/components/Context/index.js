@@ -1,3 +1,4 @@
+  
 /*
 Context for maintaining a global authentication-state is created in this separate file   
 */
@@ -17,8 +18,8 @@ export class Provider extends Component {
 
     constructor(props) {
         super(props);
-        let authUser = [JSON.parse(Cookies.get("logged"))] || null ;
-        console.log(`testtest... ${authUser} of type ${typeof(authUser)} and ${Object.entries(authUser)}`);
+        let authUser = [JSON.parse(Cookies.get("logged"))] || false ;
+        //console.log(`testtest... ${authUser} of type ${typeof(authUser)} and ${Object.entries(authUser)}`);
         if (isFinite(authUser) || !authUser) {   // if no cookie about the authenticated user is stored initialize empty "logged-state"
           this.state = {
             logged: [{
@@ -69,7 +70,7 @@ signIn = async (e, name, password) => {
         }
       };    
 
-      axios(config)
+      await axios(config)
       .then( response => {
         console.log(JSON.stringify(response.data));
         if(response.status==200) {
@@ -83,11 +84,7 @@ signIn = async (e, name, password) => {
                 }]    
              }, x => { console.log(`You are logged in ${this.state.logged[0].firstname} ${this.state.logged[0].lastname}`); 
               Cookies.set("logged", JSON.stringify(this.state.logged[0]), { expires: 10 })  }
-             );
-             console.log(`0 - original: ${this.state.logged}`);  
-             console.log(`1 - stringified: ${JSON.stringify(this.state.logged)}`);
-             console.log(`2 - back parsed: ${JSON.parse(JSON.stringify(this.state.logged))}`);
-             //Cookies.set("logged", JSON.stringify(this.state.logged), { expires: 10 }); // cookie is set after successfull login
+             )
             }
          }
         )  
@@ -118,7 +115,6 @@ signIn = async (e, name, password) => {
         actions: {
           signIn: this.signIn,
           signOut: this.signOut,
-          triggerRender: this.triggerRender,
         }
       }}>
         { this.props.children }
