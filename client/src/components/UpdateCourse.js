@@ -19,34 +19,58 @@ class UpdateCourse extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);     
     };
     
+  
+    getIdfromPath = () =>  {
+      let pathy=this.props.location.pathname.split("/") ; 
+      let pathid = pathy[pathy.length-1] ;
+      return pathid ;
+    };  
 
   getCourse = () =>  {
-    const { location} = this.props ;
-    console.log(`location.pathname in updateCourse Fun (UpdateCourse Component) is: ${location.pathname}`);
+    console.log("updateCourses called after componentDidMount")
+    const { location, history, match} = this.props ;
     const options = {
       headers: new Headers({'content-type': 'application/json'}),
     };
-    const  course = fetch(`http://localhost:5000/api/${location.pathname.slice(0, -7) }`, options) // removing the update part of the path
-    .then( x => x.json())
-    .then( x => { 
-     // throw 'Parameter is not a number!';
-     // console.log(`State did change in UpdateCourse: path: ${location.pathname}, new: ${x.id}`) ;
+
+    fetch(`http://localhost:5000/api/courses/${match.params.id}`) //here i could also use props... 
+    .then(res => { console.log(`${this.props.match.params.id}`) ;
+      if(res.status===200)  { 
+       res.json().then(
+        course => {   
+          console.log(`User.id  ${course.User.id}`);
       this.setState({
-        id: x.id,
-        courseTitle: x.title,
-        materialsNeeded: x.materialsNeeded,
-        courseDescription: x.description,
-        estimatedTime: x.estimatedTime,
-        userId: x.User.id,
-        userEmail: x.User.emailAddress,
-        userFirstName: x.User.firstName, 
-        userLastName: x.User.lastName,
-    }, x => {console.log(`in UpdateCourse new state email is ${this.state.userEmail}`)})
+        id: course.id,
+        courseTitle: course.title,
+        materialsNeeded: course.materialsNeeded,
+        courseDescription: course.description,
+        estimatedTime: course.estimatedTime,
+        userId: course.User.id,
+        userEmail: course.User.emailAddress,
+        userFirstName: course.User.firstName, 
+        userLastName: course.User.lastName,
+      }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId} and ${this.getIdfromPath()} `);
     }) 
-    .catch((error) => {console.log(error);
-      this.props.history.push("/error")})
-  };
- 
+}) 
+.catch(error => {
+this.props.history.push("/notfound");
+}) //res.json Promise err handling
+} else {
+const httpStatus = res.status;
+res.json().then(result => {
+const { message } = result;
+console.log('API returned status', httpStatus, 'with error message', message);
+this.props.history.push("/notfound");  
+});
+}
+})
+.catch(error => {
+// console.log(`in fetch catch:`);  
+this.props.history.push("/error") 
+}); // fetch Promise err handling
+}
+
+
 
 handleUpdate = (e,password) => {
     //const {courseTitle, courseDescription} = this.state ;

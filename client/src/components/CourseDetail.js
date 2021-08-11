@@ -49,10 +49,8 @@ class CourseDetail extends Component {
             }) 
       }) 
       .catch(error => {
-        console.log(`in res.json catch:`); 
         this.props.history.push("/notfound");
       }) //res.json Promise err handling
-      // ----- added else clause here
     } else {
       const httpStatus = res.status;
       res.json().then(result => {
@@ -61,10 +59,9 @@ class CourseDetail extends Component {
         this.props.history.push("/notfound");  
       });
     }
-      // ----- end of added code
     })
   .catch(error => {
-    console.log(`in fetch catch:`);  
+   // console.log(`in fetch catch:`);  
     this.props.history.push("/error") 
   }); // fetch Promise err handling
 }
