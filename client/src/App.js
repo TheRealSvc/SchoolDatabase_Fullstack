@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 
 
 import {
-    HashRouter,
+    BrowserRouter,
     Route,
     Switch,
   } from 'react-router-dom';
@@ -30,7 +30,7 @@ class App extends Component  {
     // Routing 
     render() {
       return ( 
-        <HashRouter>    
+        <BrowserRouter>    
         <div className="container"> 
         <Header/>
             <Switch> 
@@ -47,7 +47,7 @@ class App extends Component  {
               <Route component={NotFound} />
             </Switch> 
         </div>
-        </HashRouter>   
+        </BrowserRouter>   
     );
     }
 }

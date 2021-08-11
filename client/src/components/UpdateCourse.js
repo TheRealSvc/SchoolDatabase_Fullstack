@@ -14,7 +14,7 @@ class UpdateCourse extends Component {
       }
       constructor(props) {
         super(props);
-        this.state = {courseTitle: '', courseId: '', material: '', courseDescription: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
+        this.state = {courseTitle: '', id: '', materialsNeeded: '', courseDescription: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);     
     };
@@ -32,9 +32,9 @@ class UpdateCourse extends Component {
      // throw 'Parameter is not a number!';
      // console.log(`State did change in UpdateCourse: path: ${location.pathname}, new: ${x.id}`) ;
       this.setState({
-        courseId: x.id,
+        id: x.id,
         courseTitle: x.title,
-        material: x.materialsNeeded,
+        materialsNeeded: x.materialsNeeded,
         courseDescription: x.description,
         estimatedTime: x.estimatedTime,
         userId: x.User.id,
@@ -49,17 +49,18 @@ class UpdateCourse extends Component {
  
 
 handleUpdate = (e,password) => {
-    const {courseTitle, courseDescription} = this.state ;
+    //const {courseTitle, courseDescription} = this.state ;
     const { history } = this.props ;
     e.preventDefault();
-    console.log(`Hallo ich bin in handleUpdate in UpdateCourses. The title ${courseTitle}`);
     const { location} = this.props ;
     console.log(`password is ${password} and location is ${location.pathname.slice(0, -7)}`);
     var data = JSON.stringify({
-      "id": this.state.courseId,
-      "title": courseTitle,
-      "description": courseDescription,
+      "id": this.state.id,
+      "title": this.state.courseTitle,
+      "description": this.state.courseDescription,
       "userId": this.state.userId,
+      "materialsNeeded": this.state.materialsNeeded,
+      "estimatedTime": this.state.estimatedTime,
     });
     console.log(data);
     var config = {
@@ -121,7 +122,7 @@ handleUpdate = (e,password) => {
               <label htmlFor="estimatedTime">Estimated Time</label>
               <input id="estimatedTime" name="estimatedTime" type="text"  value={this.state.estimatedTime} onChange={this.handleInputChange} />
               <label htmlFor="materialsNeeded">Materials Needed</label>
-              <textarea id="materialsNeeded" name="materialsNeeded"  value={this.state.material} onChange={this.handleInputChange} />
+              <textarea id="materialsNeeded" name="materialsNeeded"  value={this.state.materialsNeeded} onChange={this.handleInputChange} />
             </div>
           </div>
           <button className="button" type="submit" onClick={ e => this.handleUpdate(e,logged[0].password) } >Update Course</button>

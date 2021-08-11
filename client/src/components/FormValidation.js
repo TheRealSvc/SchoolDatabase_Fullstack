@@ -4,7 +4,7 @@ import CreateCourse from './CreateCourse';
 
 // component for basic form validation 
 const FormValidation = (props) => {
-  console.log(`in FormValidation ${Object.keys(props)}`);
+  //console.log(`in FormValidation ${Object.entries(props)}`);
 
   //let sumLenZero = Object.values(props).map( x => x.length==0).reduce((acc, cur) => acc + cur, 0) ;
   let keysWithZeroLen = Object.entries(props).filter( x => x[1].length==0).map(function(x) {

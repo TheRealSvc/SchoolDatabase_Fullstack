@@ -1,8 +1,7 @@
 import React, { Component } from 'react'; 
 import PropTypes from 'prop-types';
-import {withRouter} from 'react-router'; // required for accessing the location prop 
 import { Consumer } from './Context';
-import {Link, Redirect} from 'react-router-dom';
+import {Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 const axios = require('axios') ;
 
@@ -36,7 +35,6 @@ class CourseDetail extends Component {
        res.json().then(
         course => {   
           console.log(`User.id  ${course.User.id}`);
-          if(course.User.id) {
             this.setState({
               courseId: course.id ,
               title: course.title,
@@ -49,23 +47,31 @@ class CourseDetail extends Component {
               userLastName: course.User.lastName,
             }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId} and ${this.getIdfromPath()} `);
             }) 
-        } else { this.props.history.push("/notfound") } 
       }) 
-    .catch((error) => {console.log(`in res.json catch:`); this.props.history.push("/notfound")}) //res.json Promise err handling
-    }})
-    .catch((error) =>  {console.log(`in fetch catch:`);  this.props.history.push("/error") }); // fetch Promise err handling
-  }
+      .catch(error => {
+        console.log(`in res.json catch:`); 
+        this.props.history.push("/notfound");
+      }) //res.json Promise err handling
+      // ----- added else clause here
+    } else {
+      const httpStatus = res.status;
+      res.json().then(result => {
+        const { message } = result;
+        console.log('API returned status', httpStatus, 'with error message', message);
+        this.props.history.push("/notfound");  
+      });
+    }
+      // ----- end of added code
+    })
+  .catch(error => {
+    console.log(`in fetch catch:`);  
+    this.props.history.push("/error") 
+  }); // fetch Promise err handling
+}
  
   componentDidMount() {
     this.updateCourses()
   } 
-
-  /*
-  componentWillReceiveProps(newProps) { 
-    if (newProps.location.pathname !== this.props.location.pathname) {
-     this.props.history.push(newProps.location.pathname) }
-    }
-  */
 
 deleteCourse = (e, coursePath, password) =>  {
   e.preventDefault() ; 
