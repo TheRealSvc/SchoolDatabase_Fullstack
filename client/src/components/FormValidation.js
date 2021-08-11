@@ -10,8 +10,6 @@ const FormValidation = (props) => {
   let keysWithZeroLen = Object.entries(props).filter( x => x[1].length==0).map(function(x) {
     return x[0];
   });
-  
-  console.log(keysWithZeroLen);
 
     if (keysWithZeroLen.length) {
       return (

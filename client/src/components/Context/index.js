@@ -8,17 +8,16 @@ export const Provider = AuthenticationContext.Provider ;
 export const Consumer = AuthenticationContext.Consumer ;
 */
 import React, { Component } from 'react';
-import { withRouter, Route ,Link } from "react-router-dom";
+import { withRouter, Route, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const AuthContext = React.createContext();
 const axios = require('axios');
 
-
 export class Provider extends Component {
-
     constructor(props) {
-      // little helper to ensure the state data can be parsed
+
+      /* little helper to ensure the state data can be parsed */
       const testjson = function(x) { 
           try {
             JSON.parse(x);

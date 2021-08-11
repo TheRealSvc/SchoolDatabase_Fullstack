@@ -11,8 +11,6 @@ import PrivateRoute from './components/PrivateRoute'
 import Forbidden from './components/Forbidden'
 import NotFound from './components/NotFound'
 import UnhandledError from './components/UnhandledError'
-import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 
 
@@ -24,9 +22,6 @@ import {
 
 
 class App extends Component  {
-  static propTypes = {
-    location: PropTypes.object.isRequired
-  }
 
     constructor(props) {
       super(props);
@@ -44,7 +39,7 @@ class App extends Component  {
               <Route path="/signup" component={UserSignUp} />
               <Route path="/signout" component={UserSignOut} />
               <PrivateRoute exact path="/courses/create" component={CreateCourse} />
-              <Route exact path="/courses/:id"  component={CourseDetail} />  
+              <Route exact path="/courses/:id" component={CourseDetail} />  
               <PrivateRoute exact path="/courses/:id/update" component={UpdateCourse} />
               <Route path="/forbidden" component={Forbidden} />
               <Route path="/notfound" component={NotFound} />  

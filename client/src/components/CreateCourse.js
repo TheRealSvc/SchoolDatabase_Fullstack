@@ -77,11 +77,11 @@ class CreateCourse extends Component {
           { ({ actions, logged }) => (
             <div>
                 <main>
-                    <div class="wrap">
+                    <div className="wrap">
                         <h2>Create Course</h2>
                         <FormValidation Title={this.state.courseTitle} Description={this.state.courseDescription} /> 
                  <form>
-                    <div class="main--flex">
+                    <div className="main--flex">
                         <div>
                             <label for="courseTitle">Course Title</label>
                             <input id="courseTitle" name="courseTitle" value={this.state.courseTitle} onChange={this.handleInputChange}  type="text" />
@@ -97,10 +97,10 @@ class CreateCourse extends Component {
                             <textarea id="materialsNeeded" name="materialsNeeded"></textarea>
                         </div>
                     </div>
-                    <button class="button" type="submit" onClick={e => this.handleCreateCourse(e,logged[0].userid,logged[0].password,
+                    <button className="button" type="submit" onClick={e => this.handleCreateCourse(e,logged[0].userid,logged[0].password,
                         document.querySelector("#courseTitle").value, document.querySelector("#courseDescription").value,
                         document.querySelector("#estimatedTime").value,document.querySelector("#materialsNeeded").value)} >Create Course</button>
-                    <button class="button button-secondary" onClick={e => {this.handleCancel(e)}} >Cancel</button>
+                    <button className="button button-secondary" onClick={e => {this.handleCancel(e)}} >Cancel</button>
                  </form>
                 </div>
                 </main>

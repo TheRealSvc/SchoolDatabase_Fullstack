@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react'; 
+import React, { Component } from 'react'; 
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router'; // required for accessing the location prop 
 import { Consumer } from './Context';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 const axios = require('axios') ;
 
-class CourseDetail extends PureComponent { 
+class CourseDetail extends Component { 
   static propTypes = {
     location: PropTypes.object.isRequired
   }
@@ -14,30 +14,32 @@ class CourseDetail extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {title: '', courseId: '', material: '', description: '', estimatedTime: '', userId: '', userEmail: '', 
-    userFirstName:'',userLastName: ''}
+    userFirstName:'', userLastName: ''}
+  };
+
+
+  getIdfromPath = () =>  {
+    let pathy=this.props.location.pathname.split("/") ; 
+    let pathid = pathy[pathy.length-1] ;
+    return pathid ;
   };
 
   updateCourses = () =>  {
-    const { location, history} = this.props ;
+    console.log("updateCourses called after componentDidMount")
+    const { location, history, match} = this.props ;
     const options = {
       headers: new Headers({'content-type': 'application/json'}),
     };
-    //const idFromRoute = location.pathname.split('/')[2] ;
-    console.log(`props match: ${this.props.match.params.id}`)
-    fetch(
-      `http://localhost:5000/api/courses/${this.props.match.params.id}`)
-    .then((res) => { console.log(`props id: ${this.props.match.params.id}`); 
-     // if (res.json().id !== this.props.match.params.id) {
-     //   this.props.history.push("/notfound");
-     // } else {
-    //  throw 'Parameter is not a number!';
-        res.json().then( (course) => {
-          console.log(`response key: ${course.User.id}`);
-          if (course.id==this.props.match.params.id) {
+    fetch(`http://localhost:5000/api/courses/${match.params.id}`) //here i could also use props... 
+    .then(res => { console.log(`${this.props.match.params.id}`) ;
+      if(res.status===200)  { 
+       res.json().then(
+        course => {   
+          console.log(`User.id  ${course.User.id}`);
+          if(course.User.id) {
             this.setState({
               courseId: course.id ,
               title: course.title,
-              //material: this.createMaterialList(x) , # legacy 
               material: course.materialsNeeded,
               description: course.description,
               estimatedTime: course.estimatedTime,
@@ -45,18 +47,25 @@ class CourseDetail extends PureComponent {
               userEmail: course.User.emailAddress,
               userFirstName: course.User.firstName , 
               userLastName: course.User.lastName,
-          }, x => { console.log(`in CourseDetails new state userId is ${this.state.userId}`)}) ; 
-        } else {
-          console.log(" redirect to /notfound") 
-          this.props.history.push("/notfound") ; }
-        })})
-        .catch((error) => {console.log(error);
-          this.props.history.push("/error")})
-  };
+            }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId} and ${this.getIdfromPath()} `);
+            }) 
+        } else { this.props.history.push("/notfound") } 
+      }) 
+    .catch((error) => {console.log(`in res.json catch:`); this.props.history.push("/notfound")}) //res.json Promise err handling
+    }})
+    .catch((error) =>  {console.log(`in fetch catch:`);  this.props.history.push("/error") }); // fetch Promise err handling
+  }
  
   componentDidMount() {
     this.updateCourses()
   } 
+
+  /*
+  componentWillReceiveProps(newProps) { 
+    if (newProps.location.pathname !== this.props.location.pathname) {
+     this.props.history.push(newProps.location.pathname) }
+    }
+  */
 
 deleteCourse = (e, coursePath, password) =>  {
   e.preventDefault() ; 
@@ -76,12 +85,11 @@ console.log(config);
 axios(config)
 .then( courseonse => { if(courseonse.status===204) { console.log("status 204") ;  this.props.history.push('/') ;
         } else { console.log("status ungleich 204"); this.props.history.push('/forbidden') } 
-    })  // update page
-.catch(function (error) {
-  console.log(error);
-  console.log(`deletion of courseId ${id} failed`);
-});
+    }) 
+    .catch((error) => {console.log(error);
+      this.props.history.push("/error")})
 }
+
 
 /* 
 On the "Course Detail" screen, add rendering logic so that the "Update Course" and "Delete Course" buttons only display if:
@@ -96,10 +104,6 @@ And the authenticated user's ID matches that of the user who owns the course.
          <main>
               <div className="actions--bar">
                 <div className="wrap">
-                  { 
-                  console.log(`In courseDetail. Auth-status is:  ${logged[0].status} and 
-                  loggedIn userEmail is ${logged[0].email}, path is: ${this.props.location.pathname}/update}`) 
-                  }
                   { (logged[0].status==="authenticated" && logged[0].email===this.state.userEmail) ? 
                   ( <>
                     <Link className="button" to={`${this.props.location.pathname}/update`}> 
@@ -110,7 +114,6 @@ And the authenticated user's ID matches that of the user who owns the course.
                     Return to List
                     </Link> 
                     </> ) : (  
-                    //<a className="button button-secondary" href="/">Return to List</a>
                     <Link className="button button-secondary" to="/">
                     Return to List
                     </Link> )
@@ -145,4 +148,4 @@ And the authenticated user's ID matches that of the user who owns the course.
       );
 }
 }
-export default withRouter(CourseDetail);
+export default CourseDetail;
