@@ -8,7 +8,7 @@ export const Provider = AuthenticationContext.Provider ;
 export const Consumer = AuthenticationContext.Consumer ;
 */
 import React, { Component } from 'react';
-import { withRouter, Route, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const AuthContext = React.createContext();
