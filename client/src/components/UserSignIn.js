@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { withRouter , Redirect} from "react-router";
 import { Consumer } from './Context';
 
+
+/**
+ * UserSignIn component to render the signIn screen. Login is performed by calling the "context method signIn" 
+ */
 class UserSignIn extends Component { 
 
   constructor(props) {

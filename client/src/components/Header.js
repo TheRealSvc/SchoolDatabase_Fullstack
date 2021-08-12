@@ -3,9 +3,11 @@ import { Consumer } from './Context';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 
+
+/**
+ * Renders the Header that is displayed independently of the route to show information about the signed-in user  
+ */
 const Header = (props) => {
-  //const { logged } = useContext(Consumer);
-  //console.log(Object.entries(logged[0]));  
     return (
         <Consumer>
         { ({ actions, logged } ) => (

@@ -5,15 +5,19 @@ import { Consumer } from './Context';
 import FormValidation from './FormValidation' ;
 const axios = require('axios');
 
-
+/**
+ * Create course componenent renders a CreateCourse screen. 
+ * If no user is signed-in a redirect to the signIn happens.
+ * Form Validation is displayed based on the API output.  
+ */
 class CreateCourse extends Component { 
     static propTypes = {
         location: PropTypes.object.isRequired
       }
-
+      
       constructor(props) {
         super(props);
-        this.state = {courseTitle: '', courseDescription: ''};
+        this.state = {courseTitle: '', courseDescription: '', valErrors: '' };
         this.handleCancel = this.handleCancel.bind(this);
         this.handleCreateCourse = this.handleCreateCourse.bind(this);
         this.handleInputChange =  this.handleInputChange.bind(this);      
@@ -28,14 +32,9 @@ class CreateCourse extends Component {
         this.props.history.push("/");
       }
 
-      handleCreateCourse = (e, userId, password,title, description, estTime, matNeeded) => {
+      handleCreateCourse = (e, userId, password, title, description, estTime, matNeeded) => {
         const { history } = this.props ;
-        e.preventDefault();
-        //console.log(`Hallo ich bin in handleCreateCourse in CreateCourses. The password ${password} and userId ${userId}`)
-        //const { location} = this.props ;
-
-       if (this.state.courseDescription.length>0 && this.state.courseTitle.length>0) {   
-
+        e.preventDefault();  
         var data = JSON.stringify({
             "title": title,
             "description": description,
@@ -43,7 +42,6 @@ class CreateCourse extends Component {
             "estimatedTime": estTime,
             "materialsNeeded": matNeeded, 
           });
-          //console.log(data);  
           var config = {
             method: 'post',
             url: 'http://localhost:5000/api/courses',
@@ -56,19 +54,22 @@ class CreateCourse extends Component {
         
         axios(config)
           .then( response => {
-            //console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             this.props.history.push('/') ;
           })
-          .catch(function (error) {
-            console.log(error);
+          .catch( error => {
+           // console.log(`hallo Du da: ${JSON.stringify(error.response.data.errors)}`);
+            this.setState({ 
+              valErrors: error.response.data.errors })
           });
-    } else {console.log("title oder description fehlen")}
   }
   
+    /**
+     * handleInputChange  
+     */  
     handleInputChange = (e) => {
       e.preventDefault();
-      console.log(`got from event.target that: ${e.target.name}, ${e.target.value}`);
-      this.setState({[e.target.name]: e.target.value }, () => { console.log(`actual state afzer setState: ${this.state}`) });
+      this.setState({[e.target.name]: e.target.value });
     }
 
     render() {
@@ -79,7 +80,7 @@ class CreateCourse extends Component {
                 <main>
                     <div className="wrap">
                         <h2>Create Course</h2>
-                        <FormValidation Title={this.state.courseTitle} Description={this.state.courseDescription} /> 
+                        <FormValidation  ApiError={this.state.valErrors} /> 
                  <form>
                     <div className="main--flex">
                         <div>

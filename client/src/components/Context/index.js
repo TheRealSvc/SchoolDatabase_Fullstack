@@ -1,5 +1,4 @@
-  
-/*
+  /*
 Context for maintaining a global authentication-state is created in this separate file   
 */
 /*import React from 'react';
@@ -14,6 +13,11 @@ import Cookies from "js-cookie";
 const AuthContext = React.createContext();
 const axios = require('axios');
 
+
+/**
+ * The provisioning of context to be accessed from all other components
+ * It is designed to only hold information about the logged-in user. Not anything else. 
+ */
 export class Provider extends Component {
     constructor(props) {
 
@@ -33,7 +37,6 @@ export class Provider extends Component {
           authUser = [JSON.parse(Cookies.get("logged"))]
         }
         
-        //console.log(`testtest... ${authUser} of type ${typeof(authUser)} and ${Object.entries(authUser)}`);
         if ( !authUser ) {   // if no cookie about the authenticated user is stored initialize empty "logged-state"
           this.state = {
             logged: [{
@@ -57,7 +60,11 @@ export class Provider extends Component {
        
 componentDidMount() {}
 
-// called in UserSignIn 
+/**
+ * signIn method is called from other components to signIn an existing user.
+ * A cookie is used to improve the user experience by storing login information in the browser until signOut is called 
+ * or the cookie-expiration time is overdue  
+ */
 signIn = async (e, name, password) => {
     console.log(name,password);
     e.preventDefault();
@@ -96,6 +103,9 @@ signIn = async (e, name, password) => {
           this.props.history.push("/error")})
     }}
     
+    /**
+     * signOut resets context state 
+     */
     signOut = () => {
         this.setState({ logged: [{
             status: "notauthenticated",

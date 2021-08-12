@@ -20,7 +20,9 @@ import {
     Switch,
   } from 'react-router-dom';
 
-
+/**
+ * Main component for routing 
+ */
 class App extends Component  {
 
     constructor(props) {
@@ -52,8 +54,4 @@ class App extends Component  {
     }
 }
 
-// error handling routes: 
-//       /notfound for CourseDetail and UpdateCourse
-//       /forbidden  if in UpdateCourse the logged user doesnt own the course
-//       /error for each api call returning "500 Internal Server Error"   
 export default App;

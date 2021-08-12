@@ -2,21 +2,23 @@ import React from 'react';
 
 
 
-// component for basic form validation 
+// component for basic form validation. Displays API errors coming from teh API  
 const FormValidation = (props) => {
-  //console.log(`in FormValidation ${Object.entries(props)}`);
 
-  //let sumLenZero = Object.values(props).map( x => x.length==0).reduce((acc, cur) => acc + cur, 0) ;
+ /* legacy: form-validation done via frontend   
   let keysWithZeroLen = Object.entries(props).filter( x => x[1].length==0).map(function(x) {
     return x[0];
   });
+*/
+
+let keysWithZeroLen = props.ApiError ;
 
     if (keysWithZeroLen.length) {
       return (
         <div className="validation--errors">
          <ul>
             <li className="validation--fonts"> 
-             Please a provide a value for:  {keysWithZeroLen.join(" , ")}
+              {keysWithZeroLen.join(" , ")}
            </li> 
          </ul>
        </div> 

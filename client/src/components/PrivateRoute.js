@@ -8,8 +8,9 @@ import {
 } from "react-router-dom";
 
 
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
+/** A wrapper for <Route> that redirects to the login-screen if you're not yet authenticated.
+* Otherwise renders the component directly
+*/ 
 function PrivateRoute({component: Children, ...rest }) {
     const { logged } = useContext(Consumer);
     console.log(`okay, this is the PrivateRoute Component with auth stat ${logged[0].status}`);

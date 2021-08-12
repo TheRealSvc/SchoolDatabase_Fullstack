@@ -1,66 +1,74 @@
 import React, { Component } from 'react';  
-import { withRouter } from "react-router";
 import { Link} from "react-router-dom";
 import { Consumer } from './Context';
 import FormValidation from './FormValidation' ;
-
 const axios = require('axios');
 
 
+/**
+ * UserSignUp renders a signUp screen 
+ */
 class UserSignUp extends Component { 
 
     constructor(props) {
         super(props);
-        this.state = {firstName: '', lastName: '', emailAddress: '', password: '', confirmPassword: ''};
+        this.state = {firstName: '', lastName: '', emailAddress: '', password: '', confirmPassword: '', valErrors: ''};
         this.handleCancel = this.handleCancel.bind(this);
         this.handleSignUp = this.handleSignUp.bind(this); 
         this.handleInputChange = this.handleInputChange.bind(this);     
     }
 
+    //handleCancel just redirects to the courses page
     handleCancel = (e) => {
         e.preventDefault();
         this.props.history.push("/");
       }
       
-      handleSignUp = ( e, loggedPassword) => {
-        const {firstName, lastName , emailAddress, password, confirmPassword} = this.state;
-        const { history } = this.props ;
-        e.preventDefault();
-        console.log(`Hallo ich bin in handleUpdate in signUp. firstName:  ${firstName}`)
-        const { location} = this.props ;
-        //console.log(`password is ${password} and location is ${location.pathname.slice(0, -7)}` );
-        
-        if (password===confirmPassword) {
-
-            var data = JSON.stringify({
-                "firstName": firstName,
-                "lastName": lastName,
-                "emailAddress": emailAddress,
-                "password": password
-            });
-            
-            console.log(data);
-
-            var config = {
-                method: 'post',
-                url: 'http://localhost:5000/api/users',
-                headers: { 
-                'Content-Type': 'application/json', 
-                'Authorization': loggedPassword
-                },
-                data : data
-            };
-            axios(config)
-                .then(function (response) {
-                console.log(JSON.stringify(response.data));
+    /**
+     * calls the api at url http://localhost:5000/api/users to create a new user 
+     * cb is the signIn callback to be executed immediately after successfull signUp 
+     */  
+    handleSignUp = (e, cb) => {
+      const { history } = this.props ;
+      e.preventDefault();
+      console.log(`Hallo ich bin in handleUpdate in signUp. firstName:  ${this.state.firstName}`)
+      const { location} = this.props ;
+      
+      if (this.state.password===this.state.confirmPassword) {
+          var data = JSON.stringify({
+              "firstName": this.state.firstName,
+              "lastName": this.state.lastName,
+              "emailAddress": this.state.emailAddress,
+              "password": this.state.password
+          });
+      
+          var config = {
+              method: 'post',
+              url: 'http://localhost:5000/api/users',
+              headers: { 
+              'Content-Type': 'application/json', 
+              'Authorization': this.state.password
+              },
+              data : data
+          };
+          axios(config)
+              .then(function (response) {
+              console.log(JSON.stringify(response.data));
+              })
+              .then( x => {
+                console.log(`now signIn should be triggered. Email is: ${this.state.emailAddress}`) 
+                cb(e, document.querySelector('#emailAddress'), document.querySelector('#password'));
+                this.props.history.push('/');
                 })
-                .then( this.props.history.push('/') )
-                .catch(function (error) {
-                console.log(error);
+                .catch( error => {
+                  console.log(`UserSignUp error: ${JSON.stringify(error.response.data.errors)}`);
+                  this.setState({ 
+                    valErrors: error.response.data.errors })
                 });
-            }
-    }
+          }
+  }
 
+ // generalized handling of user Input 
     handleInputChange = (e) => {
       e.preventDefault();
       console.log(`state: ${e.target.name}, ${e.target.value}`);
@@ -76,7 +84,7 @@ class UserSignUp extends Component {
         <main>
         <div className="form--centered">
           <h2>Sign Up</h2>
-          <FormValidation Firstname={this.state.firstName} Lastname={this.state.lastName} Email={this.state.emailAddress} Password={this.state.password} PasswordConfirm={this.state.confirmPassword} /> 
+          <FormValidation  ApiError={this.state.valErrors} /> 
           <form>
             <label htmlFor="firstName">First Name</label>
             <input id="firstName" name="firstName" type="text" value={this.state.firstName} onChange={this.handleInputChange} />
@@ -88,7 +96,7 @@ class UserSignUp extends Component {
             <input id="password" name="password" type="password" value={this.state.password} onChange={this.handleInputChange} />
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input id="confirmPassword" name="confirmPassword" type="password" value={this.state.confirmPassword} onChange={this.handleInputChange} />
-            <button className="button" type="submit" onClick={ e => this.handleSignUp(e,logged[0].password) }>Sign Up</button>
+            <button className="button" type="submit" onClick={ e => this.handleSignUp(e, actions.signIn) }>Sign Up</button>
             <button className="button button-secondary" onClick={ e => this.handleCancel(e) }>Cancel</button>
           </form>
           <p>Already have a user account? <Link to="/signin">Click here to </Link> sign in !</p>

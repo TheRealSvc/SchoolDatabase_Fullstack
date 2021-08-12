@@ -7,33 +7,32 @@ import FormValidation from './FormValidation' ;
 
 let axios = require('axios');
 
-
+/**
+ * Updates an existing course
+ * Form validation is based on the api result 
+ */
 class UpdateCourse extends Component { 
     static propTypes = {
         location: PropTypes.object.isRequired
       }
       constructor(props) {
         super(props);
-        this.state = {courseTitle: '', id: '', materialsNeeded: '', courseDescription: '', estimatedTime: '', userId: '', userEmail: '', userFirstName:'',userLastName: ''}
+        this.state = {courseTitle: '', id: '', materialsNeeded: '', courseDescription: '', estimatedTime: '', userId: '',
+         userEmail: '', userFirstName:'',userLastName: '', valErrors: '' }
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);     
     };
     
   
-    getIdfromPath = () =>  {
-      let pathy=this.props.location.pathname.split("/") ; 
-      let pathid = pathy[pathy.length-1] ;
-      return pathid ;
-    };  
-
+  /** 
+  * Here course data is fetched from http://localhost:5000/api/courses/:id  
+  * Error handling resdirecting to /notfound and /error page in case of error
+   */
   getCourse = () =>  {
     console.log("updateCourses called after componentDidMount")
-    const { location, history, match} = this.props ;
-    const options = {
-      headers: new Headers({'content-type': 'application/json'}),
-    };
+    const { match} = this.props ;
 
-    fetch(`http://localhost:5000/api/courses/${match.params.id}`) //here i could also use props... 
+    fetch(`http://localhost:5000/api/courses/${match.params.id}`) 
     .then(res => { console.log(`${this.props.match.params.id}`) ;
       if(res.status===200)  { 
        res.json().then(
@@ -49,12 +48,12 @@ class UpdateCourse extends Component {
         userEmail: course.User.emailAddress,
         userFirstName: course.User.firstName, 
         userLastName: course.User.lastName,
-      }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId} and ${this.getIdfromPath()} `);
+      }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId}`);
     }) 
 }) 
 .catch(error => {
 this.props.history.push("/notfound");
-}) //res.json Promise err handling
+}) 
 } else {
 const httpStatus = res.status;
 res.json().then(result => {
@@ -65,15 +64,15 @@ this.props.history.push("/notfound");
 }
 })
 .catch(error => {
-// console.log(`in fetch catch:`);  
 this.props.history.push("/error") 
-}); // fetch Promise err handling
+}); 
 }
 
-
-
+/**  
+* handleUpdate: callback function for updating course data
+* Form Validation is based on API response  
+*/
 handleUpdate = (e,password) => {
-    //const {courseTitle, courseDescription} = this.state ;
     const { history } = this.props ;
     e.preventDefault();
     const { location} = this.props ;
@@ -86,7 +85,6 @@ handleUpdate = (e,password) => {
       "materialsNeeded": this.state.materialsNeeded,
       "estimatedTime": this.state.estimatedTime,
     });
-    console.log(data);
     var config = {
       method: 'put',
       url: `http://localhost:5000/api${location.pathname.slice(0, -7)}`,
@@ -104,9 +102,9 @@ handleUpdate = (e,password) => {
     .then( response => {
       history.push('/') ;
     })
-    .catch(function (error) {
-      history.push('/forbidden');  
-      console.log(error);
+    .catch( (error) => {
+      error.response.status===403 ? history.push('/forbidden') : this.setState({ 
+        valErrors: error.response.data.errors })  
     }); 
 }
 
@@ -115,15 +113,18 @@ handleUpdate = (e,password) => {
     this.getCourse() ;
   } 
 
+  // handles input change in a generalized way
   handleInputChange = (e) => {
     e.preventDefault();
     console.log(`state: ${e.target.name}, ${e.target.value}`);
     this.setState({[e.target.name]: e.target.value }, () => { console.log(this.state) });
   }
 
+  // after hitting Cancel a redirect to the corresponding courseDetail page is done.  
   handleCancel = (e) => {
     e.preventDefault();
-    this.props.history.push("/");
+    console.log(`after pressing cancel: ${this.props.match.params.id}`) ;
+    this.props.history.push(`/courses/${this.props.match.params.id}`);
  }
 
     render() {  
@@ -132,7 +133,7 @@ handleUpdate = (e,password) => {
         { ({ actions, logged }) => (
     <div className="wrap">
         <h2>Update Course</h2>
-        <FormValidation Title={this.state.courseTitle} Description={this.state.courseDescription} /> 
+        <FormValidation  ApiError={this.state.valErrors} /> 
         <form>
           <div className="main--flex">
             <div>

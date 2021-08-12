@@ -5,6 +5,12 @@ import {Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 const axios = require('axios') ;
 
+
+/**
+* On the "Course Detail" screen, add rendering logic so that the "Update Course" and "Delete Course" buttons only display if:
+* There's an authenticated user.
+* And the authenticated user's ID matches that of the user who owns the course.
+*/
 class CourseDetail extends Component { 
   static propTypes = {
     location: PropTypes.object.isRequired
@@ -16,13 +22,17 @@ class CourseDetail extends Component {
     userFirstName:'', userLastName: ''}
   };
 
-
+/* legacy code - kept for "just in case"
   getIdfromPath = () =>  {
     let pathy=this.props.location.pathname.split("/") ; 
     let pathid = pathy[pathy.length-1] ;
     return pathid ;
   };
+*/
 
+/**
+ * callback for updating a course. Its calling the API-endpoint http://localhost:5000/api/courses/:id
+*/
   updateCourses = () =>  {
     console.log("updateCourses called after componentDidMount")
     const { location, history, match} = this.props ;
@@ -45,12 +55,11 @@ class CourseDetail extends Component {
               userEmail: course.User.emailAddress,
               userFirstName: course.User.firstName , 
               userLastName: course.User.lastName,
-            }, x => { console.log(`in CourseDetails new state courseId is ${this.state.courseId} and ${this.getIdfromPath()} `);
             }) 
       }) 
       .catch(error => {
         this.props.history.push("/notfound");
-      }) //res.json Promise err handling
+      }) 
     } else {
       const httpStatus = res.status;
       res.json().then(result => {
@@ -60,16 +69,18 @@ class CourseDetail extends Component {
       });
     }
     })
-  .catch(error => {
-   // console.log(`in fetch catch:`);  
+  .catch(error => {  
     this.props.history.push("/error") 
-  }); // fetch Promise err handling
+  }); 
 }
  
   componentDidMount() {
     this.updateCourses()
   } 
 
+ /**
+  * Deletes a course given encrypted password and routepath to the course 
+  */ 
 deleteCourse = (e, coursePath, password) =>  {
   e.preventDefault() ; 
   console.log(`password is : ${password}`)
@@ -94,11 +105,6 @@ axios(config)
 }
 
 
-/* 
-On the "Course Detail" screen, add rendering logic so that the "Update Course" and "Delete Course" buttons only display if:
-There's an authenticated user.
-And the authenticated user's ID matches that of the user who owns the course.
-*/
   render(){
     return (
       <Consumer>
