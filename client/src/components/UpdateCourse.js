@@ -29,7 +29,6 @@ class UpdateCourse extends Component {
    */
   getCourse = (loggedUserId) =>  {
     const { history, match} = this.props ;
-    //console.log(`updateCourses called after componentDidMount with courseId a: ${match.params.id}, b: ${this.state.userId}, c: ${loggedUserId}`);
       fetch(`http://localhost:5000/api/courses/${match.params.id}`) 
       .then(res => { 
         if(res.status===200)  { 

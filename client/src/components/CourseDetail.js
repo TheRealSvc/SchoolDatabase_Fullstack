@@ -18,13 +18,6 @@ class CourseDetail extends Component {
     userFirstName:'', userLastName: ''}
   };
 
-/* legacy code - kept for "just in case"
-  getIdfromPath = () =>  {
-    let pathy=this.props.location.pathname.split("/") ; 
-    let pathid = pathy[pathy.length-1] ;
-    return pathid ;
-  };
-*/
 
 /**
  * callback for updating a course. Its calling the API-endpoint http://localhost:5000/api/courses/:id
