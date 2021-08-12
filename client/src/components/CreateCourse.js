@@ -1,5 +1,4 @@
 import React, { Component } from 'react'; 
-import PropTypes from 'prop-types';
 import {withRouter} from 'react-router'; // required for accessing the location prop 
 import { Consumer } from './Context';
 import FormValidation from './FormValidation' ;
@@ -11,9 +10,6 @@ const axios = require('axios');
  * Form Validation is displayed based on the API output.  
  */
 class CreateCourse extends Component { 
-    static propTypes = {
-        location: PropTypes.object.isRequired
-      }
       
       constructor(props) {
         super(props);
@@ -24,7 +20,7 @@ class CreateCourse extends Component {
         };
 
       componentDidUpdate() {
-        const { location } = this.props ;
+       // const { location } = this.props ;
         }
 
       handleCancel = (e) => {
@@ -55,17 +51,17 @@ class CreateCourse extends Component {
         axios(config)
           .then( response => {
             console.log(JSON.stringify(response.data));
-            this.props.history.push('/') ;
+            history.push('/') ;
           })
           .catch( error => {
-           // console.log(`hallo Du da: ${JSON.stringify(error.response.data.errors)}`);
+           console.log(`hallo Du da: ${JSON.stringify(error.response.data.errors)}`);
             this.setState({ 
               valErrors: error.response.data.errors })
           });
   }
   
     /**
-     * handleInputChange  
+     * handleInputChange: handles  
      */  
     handleInputChange = (e) => {
       e.preventDefault();
@@ -84,17 +80,17 @@ class CreateCourse extends Component {
                  <form>
                     <div className="main--flex">
                         <div>
-                            <label for="courseTitle">Course Title</label>
+                            <label htmlFor="courseTitle">Course Title</label>
                             <input id="courseTitle" name="courseTitle" value={this.state.courseTitle} onChange={this.handleInputChange}  type="text" />
                             <p>By {logged[0].firstname} {logged[0].lastname}</p>
-                            <label for="courseDescription">Course Description</label>
+                            <label htmlFor="courseDescription">Course Description</label>
                             <textarea id="courseDescription" name="courseDescription" value={this.state.courseDescription} onChange={this.handleInputChange}></textarea>
                         </div>
 
                         <div>
-                            <label for="estimatedTime">Estimated Time</label>
+                            <label htmlFor="estimatedTime">Estimated Time</label>
                             <input id="estimatedTime" name="estimatedTime" type="text" defaultValue="" />
-                            <label for="materialsNeeded">Materials Needed</label>
+                            <label htmlFor="materialsNeeded">Materials Needed</label>
                             <textarea id="materialsNeeded" name="materialsNeeded"></textarea>
                         </div>
                     </div>

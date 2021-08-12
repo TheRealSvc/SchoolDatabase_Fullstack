@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Consumer } from '../components/Context';
-import { withRouter } from "react-router";
+//import { withRouter } from "react-router";
 import {
-  BrowserRouter as Router,
+  //BrowserRouter as Router,
   Route,
   Redirect,
 } from "react-router-dom";
@@ -13,13 +13,12 @@ import {
 */ 
 function PrivateRoute({component: Children, ...rest }) {
     const { logged } = useContext(Consumer);
-    console.log(`okay, this is the PrivateRoute Component with auth stat ${logged[0].status}`);
     return (
       <Route
         {...rest}
         render={ props =>
           logged[0].status==="authenticated" ? (   
-            <Children {...props}/>  
+            <Children {...props} logged={logged[0]}/> // ensures that auth info is passed 
           ) : (
             <Redirect
               to={{
@@ -33,5 +32,5 @@ function PrivateRoute({component: Children, ...rest }) {
     );
   }
   
-export default withRouter(PrivateRoute);
+export default PrivateRoute;
 

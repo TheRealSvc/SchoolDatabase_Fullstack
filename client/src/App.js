@@ -25,11 +25,6 @@ import {
  */
 class App extends Component  {
 
-    constructor(props) {
-      super(props);
-    };
- 
-    // Routing 
     render() {
       return ( 
         <BrowserRouter>    

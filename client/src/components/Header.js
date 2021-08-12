@@ -1,7 +1,7 @@
-import {React, useEffect }  from 'react';
+import { React }  from 'react';
 import { Consumer } from './Context';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+
 
 
 /**
@@ -10,13 +10,13 @@ import { useContext } from 'react';
 const Header = (props) => {
     return (
         <Consumer>
-        { ({ actions, logged } ) => (
+        { ({  logged } ) => (
         <div>
   
         <div id="root">
           <header>
             <div className="wrap header--flex">
-              <h1 className="header--logo"><a href="index.html">Courses</a></h1>
+              <h1 className="header--logo"><a href="/">Courses</a></h1>
               <nav>
             {  logged[0].status==="authenticated" ? (
               <>

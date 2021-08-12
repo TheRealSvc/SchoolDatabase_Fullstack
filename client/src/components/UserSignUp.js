@@ -29,10 +29,7 @@ class UserSignUp extends Component {
      * cb is the signIn callback to be executed immediately after successfull signUp 
      */  
     handleSignUp = (e, cb) => {
-      const { history } = this.props ;
       e.preventDefault();
-      console.log(`Hallo ich bin in handleUpdate in signUp. firstName:  ${this.state.firstName}`)
-      const { location} = this.props ;
       
       if (this.state.password===this.state.confirmPassword) {
           var data = JSON.stringify({

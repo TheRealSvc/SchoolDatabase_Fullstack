@@ -1,22 +1,13 @@
-  /*
-Context for maintaining a global authentication-state is created in this separate file   
-*/
-/*import React from 'react';
-const AuthenticationContext = React.createContext() ;
-export const Provider = AuthenticationContext.Provider ;
-export const Consumer = AuthenticationContext.Consumer ;
-*/
+// Context for maintaining a global authentication-state is created in this separate file   
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
 import Cookies from "js-cookie";
-
 const AuthContext = React.createContext();
 const axios = require('axios');
 
-
 /**
  * The provisioning of context to be accessed from all other components
- * It is designed to only hold information about the logged-in user. Not anything else. 
+ * It is designed to only hold information about the logged-in user. Nothing else. 
  */
 export class Provider extends Component {
     constructor(props) {
@@ -68,7 +59,6 @@ componentDidMount() {}
 signIn = async (e, name, password) => {
     console.log(name,password);
     e.preventDefault();
-    const form = document.getElementById("signinform");
     
     if (name !== this.state.logged[0].email) {
       const authHeader = `Basic ${window.btoa(name.value+":"+password.value)}` 
@@ -84,7 +74,7 @@ signIn = async (e, name, password) => {
       await axios(config)
       .then( response => {
         console.log(JSON.stringify(response.data));
-        if(response.status==200) {
+        if(response.status===200) {
             this.setState({ logged: [{
                 status: "authenticated",
                 email: name.value,

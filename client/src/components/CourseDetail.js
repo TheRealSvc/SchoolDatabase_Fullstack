@@ -1,5 +1,4 @@
 import React, { Component } from 'react'; 
-import PropTypes from 'prop-types';
 import { Consumer } from './Context';
 import {Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -12,9 +11,6 @@ const axios = require('axios') ;
 * And the authenticated user's ID matches that of the user who owns the course.
 */
 class CourseDetail extends Component { 
-  static propTypes = {
-    location: PropTypes.object.isRequired
-  }
 
   constructor(props) {
     super(props);
@@ -35,10 +31,8 @@ class CourseDetail extends Component {
 */
   updateCourses = () =>  {
     console.log("updateCourses called after componentDidMount")
-    const { location, history, match} = this.props ;
-    const options = {
-      headers: new Headers({'content-type': 'application/json'}),
-    };
+    const { match} = this.props ;
+ 
     fetch(`http://localhost:5000/api/courses/${match.params.id}`) //here i could also use props... 
     .then(res => { console.log(`${this.props.match.params.id}`) ;
       if(res.status===200)  { 
@@ -118,7 +112,7 @@ axios(config)
                     <Link className="button" to={`${this.props.location.pathname}/update`}> 
                       Update Course
                     </Link>
-                    <a className="button" onClick={e => {this.deleteCourse(e,this.props.location.pathname, logged[0].password)}} >Delete Course</a>
+                    <Link className="button" to="/" onClick={e => {this.deleteCourse(e,this.props.location.pathname, logged[0].password)}} >Delete Course</Link>
                     <Link className="button button-secondary" to="/">
                     Return to List
                     </Link> 

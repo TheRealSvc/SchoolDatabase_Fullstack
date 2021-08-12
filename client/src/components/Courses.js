@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import {withRouter} from 'react-router'; 
+import React, { Component } from 'react'; 
 import CourseElement from './CourseElement';
 import '../global.css';
 import {Link} from 'react-router-dom';
@@ -13,14 +12,13 @@ class Courses extends Component {
     constructor(props) {
         super(props);
         this.state = {courses: ''}
-        //console.log(`in Courses: ${props}`);
       };
 
       updateCourses = () =>  {
         const options = {
           headers: new Headers({'content-type': 'application/json'}),
         };
-        const  courses = fetch('http://localhost:5000/api/courses', options)
+        fetch('http://localhost:5000/api/courses', options)
         .then( x => x.json())
         .then( x => { this.setState({courses: x }) ; console.log(this.state) })
         .catch( 'error in fetching courses') 
@@ -31,7 +29,6 @@ class Courses extends Component {
       } 
 
       createCourseArray = (courses) => {
-        //console.log(`in createCourseArray Anfang: ${courses}`);
         let courseArray = [] ;
          for (let i=0; i<courses.length; i++) {
            console.log(i);
