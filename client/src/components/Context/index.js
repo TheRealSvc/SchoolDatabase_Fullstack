@@ -39,7 +39,6 @@ export class Provider extends Component {
                 userid: null,
             }]
             };
-            console.log("initialization with empty user (no cookie)") ;
           } else {   //otherwise use cookie information
             this.state = {
               logged: authUser
@@ -58,11 +57,18 @@ componentDidMount() {}
  */
 signIn = async (e, name, password) => {
     console.log(name,password);
-    e.preventDefault();
     
+    e.preventDefault();
+    /*
+    let empty = "" ;
+   
+    if (!name || !password) { 
+     empty = "missing data !" 
+     this.setState({empty: empty}) ;
+    } ; */
+  
     if (name !== this.state.logged[0].email) {
-      const authHeader = `Basic ${window.btoa(name.value+":"+password.value)}` 
-      console.log(authHeader)   
+      const authHeader = `Basic ${window.btoa(name.value+":"+password.value)}`  
       let config = {
        method: 'get',
        url: 'http://localhost:5000/api/users',
@@ -90,7 +96,8 @@ signIn = async (e, name, password) => {
          }
         )  
         .catch((error) => {console.log(error);
-          this.props.history.push("/error")})
+          //this.props.history.push("/error")
+        })
     }}
     
     /**
@@ -104,6 +111,7 @@ signIn = async (e, name, password) => {
             firstname: "",
             lastname: "",
             userid: null,
+            empty: "",
             }]    
          }, x => { console.log(this.state.logged) });
          Cookies.remove("logged"); 

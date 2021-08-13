@@ -20,7 +20,7 @@ class Courses extends Component {
         };
         fetch('http://localhost:5000/api/courses', options)
         .then( x => x.json())
-        .then( x => { this.setState({courses: x }) ; console.log(this.state) })
+        .then( x => { this.setState({courses: x }) })
         .catch( 'error in fetching courses') 
       };
 
@@ -31,7 +31,6 @@ class Courses extends Component {
       createCourseArray = (courses) => {
         let courseArray = [] ;
          for (let i=0; i<courses.length; i++) {
-           console.log(i);
            courseArray.push(
            <CourseElement course={[courses[i].id, courses[i].title, courses[i].estimatedTime]} key={i} /> );
          }

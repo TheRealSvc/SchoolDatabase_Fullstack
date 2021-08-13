@@ -12,7 +12,7 @@ class UserSignUp extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {firstName: '', lastName: '', emailAddress: '', password: '', confirmPassword: '', valErrors: ''};
+        this.state = {firstName: '', lastName: '', emailAddress: '', password: "", confirmPassword: '', valErrors: ''};
         this.handleCancel = this.handleCancel.bind(this);
         this.handleSignUp = this.handleSignUp.bind(this); 
         this.handleInputChange = this.handleInputChange.bind(this);     
@@ -30,16 +30,49 @@ class UserSignUp extends Component {
      */  
     handleSignUp = (e, cb) => {
       e.preventDefault();
-      
-      if (this.state.password===this.state.confirmPassword) {
-          var data = JSON.stringify({
+      let confirmError='';
+      let data = "";
+
+      if (!this.state.password && this.state.confirmPassword) { // case password empty, confirmation not empty 
+         confirmError = "Passwords must be identical"  ;
+          data = JSON.stringify({
               "firstName": this.state.firstName,
               "lastName": this.state.lastName,
-              "emailAddress": this.state.emailAddress,
-              "password": this.state.password
-          });
-      
-          var config = {
+              "emailAddress": this.state.emailAddress
+              });
+        }  else if (!this.state.password && !this.state.confirmPassword) {  // case password empty, confirmation empty  
+          confirmError="" ;
+          data = JSON.stringify({
+            "firstName": this.state.firstName,
+            "lastName": this.state.lastName,
+            "emailAddress": this.state.emailAddress
+            });
+        } else if ( this.state.password && !this.state.confirmPassword)  {  // case password not empty, confirmation empty   
+          confirmError = "Passwords must be identical"   ;
+          data = JSON.stringify({
+            "firstName": this.state.firstName,
+            "lastName": this.state.lastName,
+            "emailAddress": this.state.emailAddress,
+            "password": this.state.password
+            });
+        } else if ( this.state.password && this.state.confirmPassword && this.state.password !== this.state.confirmPassword )  {  // case password not empty, confirmation not empty but unequal
+          confirmError = "Passwords must be identical"   ;
+          data = JSON.stringify({
+            "firstName": this.state.firstName,
+            "lastName": this.state.lastName,
+            "emailAddress": this.state.emailAddress,
+            "password": this.state.password
+            });
+        } else if ( this.state.password && this.state.confirmPassword && this.state.password === this.state.confirmPassword )  {  // case password not empty, confirmation not empty but equal
+          confirmError = ""   ;
+          data = JSON.stringify({
+            "firstName": this.state.firstName,
+            "lastName": this.state.lastName,
+            "emailAddress": this.state.emailAddress,
+            "password": this.state.password
+            });
+          }   
+      var config = {
               method: 'post',
               url: 'http://localhost:5000/api/users',
               headers: { 
@@ -53,17 +86,21 @@ class UserSignUp extends Component {
               console.log(JSON.stringify(response.data));
               })
               .then( x => {
-                console.log(`now signIn should be triggered. Email is: ${this.state.emailAddress}`) 
+                console.log(`now signIn should be triggered. Email is: ${this.state.emailAddress}`); 
                 cb(e, document.querySelector('#emailAddress'), document.querySelector('#password'));
                 this.props.history.push('/');
                 })
                 .catch( error => {
                   console.log(`UserSignUp error: ${JSON.stringify(error.response.data.errors)}`);
+                  confirmError ?
                   this.setState({ 
-                    valErrors: error.response.data.errors })
+                    valErrors: [...error.response.data.errors, confirmError] })
+                    :
+                    this.setState({ 
+                    valErrors: error.response.data.errors }) 
                 });
-          }
-  }
+      } 
+
 
  // generalized handling of user Input 
     handleInputChange = (e) => {
@@ -81,7 +118,7 @@ class UserSignUp extends Component {
         <main>
         <div className="form--centered">
           <h2>Sign Up</h2>
-          <FormValidation  ApiError={this.state.valErrors} /> 
+          <FormValidation  ApiError={this.state.valErrors}  /> 
           <form>
             <label htmlFor="firstName">First Name</label>
             <input id="firstName" name="firstName" type="text" value={this.state.firstName} onChange={this.handleInputChange} />

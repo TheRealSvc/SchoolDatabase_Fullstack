@@ -22,7 +22,7 @@ const Header = (props) => {
               <>
                 <ul className="header--signedin">
                     <li style={{ textTransform: 'capitalize' }}>
-                      Welcome, {logged[0].firstname } {logged[0].lastname}!
+                      Welcome, {logged[0].firstname } {logged[0].lastname} ! 
                     </li>
                     <li>
                       <Link to='/signout'>Sign Out</Link>
