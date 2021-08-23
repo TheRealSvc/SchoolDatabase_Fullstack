@@ -5,6 +5,9 @@ const express = require('express');
 const morgan = require('morgan');
 const sequelize = require("./models").sequelize;
 const routes = require("./routes");
+const compression = require('compression');
+const helmet = require('helmet');
+
 // variable to enable global error logging
 // Import cors library
 const cors = require('cors');
@@ -15,7 +18,8 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 
 // create the Express app
 const app = express();
-
+app.use(helmet()) ;
+app.use(compression());
 // check connection 
 (async () => {
   try {
